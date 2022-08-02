@@ -45,10 +45,10 @@ def test_indecies_are_present(RunningPiHole):
 
 def validate_curl(http_rc, expected_http_code, page_contents):
     if int(http_rc.rc) != 0 or int(http_rc.stdout) != expected_http_code:
-        print('CURL return code: {}'.format(http_rc.rc))
-        print('CURL stdout: {}'.format(http_rc.stdout))
-        print('CURL stderr:{}'.format(http_rc.stderr))
-        print('CURL file:\n{}\n'.format(page_contents.encode('utf-8')))
+        print(f'CURL return code: {http_rc.rc}')
+        print(f'CURL stdout: {http_rc.stdout}')
+        print(f'CURL stderr:{http_rc.stderr}')
+        print(f"CURL file:\n{page_contents.encode('utf-8')}\n")
 
 
 @pytest.mark.parametrize('addr', [ 'localhost' ] )

@@ -16,9 +16,9 @@ def RunningPiHole(DockerPersist, Slow, persist_webserver, persist_tag, start_cmd
     #print DockerPersist.run('ps -ef').stdout
     assert DockerPersist.dig.run('ping -c 1 test_pihole').rc == 0
     Slow(lambda: DockerPersist.run('pgrep pihole-FTL').rc == 0)
-    Slow(lambda: DockerPersist.run('pgrep {}'.format(persist_webserver)).rc == 0)
+    Slow(lambda: DockerPersist.run(f'pgrep {persist_webserver}').rc == 0)
     oldpid = DockerPersist.run('pidof pihole-FTL')
-    cmd = DockerPersist.run('pihole {}'.format(start_cmd))
+    cmd = DockerPersist.run(f'pihole {start_cmd}')
     Slow(lambda: DockerPersist.run('pgrep pihole-FTL').rc == 0)
     newpid = DockerPersist.run('pidof pihole-FTL')
     for pid in [oldpid, newpid]:
@@ -37,7 +37,7 @@ def RunningPiHole(DockerPersist, Slow, persist_webserver, persist_tag, start_cmd
 ])
 def test_pihole_enable_disable_command(RunningPiHole, Dig, persist_tag, start_cmd, hostname, expected_ip, expected_messages):
     ''' the start_cmd tests are all built into the RunningPiHole fixture in this file '''
-    dig_cmd = "dig +time=1 +noall +answer {} @test_pihole".format(hostname)
+    dig_cmd = f"dig +time=1 +noall +answer {hostname} @test_pihole"
     lookup = RunningPiHole.dig.run(dig_cmd)
     assert lookup.rc == 0
     lookup_ip = lookup.stdout.split()[4]

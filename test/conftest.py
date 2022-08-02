@@ -37,7 +37,7 @@ def args_env():
 
 @pytest.fixture()
 def args(args_volumes, args_env):
-    return "{} {}".format(args_volumes, args_env)
+    return f"{args_volumes} {args_env}"
 
 @pytest.fixture()
 def test_args():
@@ -58,9 +58,13 @@ def DockerGeneric(request, _test_args, _args, _image, _cmd, _entrypoint):
     def teardown():
         check_output("docker logs {}".format(docker_id))
         check_output("docker rm -f {}".format(docker_id))
+
     request.addfinalizer(teardown)
 
-    docker_container = testinfra.backend.get_backend("docker://" + docker_id, sudo=False)
+    docker_container = testinfra.backend.get_backend(
+        f"docker://{docker_id}", sudo=False
+    )
+
     docker_container.id = docker_id
 
     return docker_container
@@ -98,7 +102,7 @@ def debian_version():
 
 @pytest.fixture()
 def tag(version, arch, debian_version):
-    return '{}-{}-{}'.format(version, arch, debian_version)
+    return f'{version}-{arch}-{debian_version}'
 
 @pytest.fixture
 def webserver(tag):
@@ -108,7 +112,7 @@ def webserver(tag):
 @pytest.fixture()
 def image(tag):
     image = 'pihole'
-    return '{}:{}'.format(image, tag)
+    return f'{image}:{tag}'
 
 @pytest.fixture()
 def cmd():
@@ -141,7 +145,7 @@ def persist_args_env():
 
 @pytest.fixture(scope='module')
 def persist_args(persist_args_volumes, persist_args_env):
-    return "{} {}".format(persist_args_volumes, persist_args_env)
+    return f"{persist_args_volumes} {persist_args_env}"
 
 @pytest.fixture(scope='module')
 def persist_test_args():
@@ -150,7 +154,7 @@ def persist_test_args():
 
 @pytest.fixture(scope='module')
 def persist_tag(persist_version, persist_arch, persist_debian_version):
-    return '{}_{}_{}'.format(persist_version, persist_arch, persist_debian_version)
+    return f'{persist_version}_{persist_arch}_{persist_debian_version}'
 
 @pytest.fixture(scope='module')
 def persist_webserver(persist_tag):
@@ -160,7 +164,7 @@ def persist_webserver(persist_tag):
 @pytest.fixture(scope='module')
 def persist_image(persist_tag):
     image = 'pihole'
-    return '{}:{}'.format(image, persist_tag)
+    return f'{image}:{persist_tag}'
 
 @pytest.fixture(scope='module')
 def persist_cmd():
